@@ -8,7 +8,7 @@ export const PlusIcon = ({ className }: { className?: string }) => {
       stroke="currentColor"
       className={className}
     >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
     </svg>
   );
 };

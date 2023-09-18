@@ -1,4 +1,4 @@
-import { UploadIcon } from '../upload-icon';
+import { UploadIcon } from '../icons/upload-icon';
 
 type Props = {
   onFilesSelect: (files: File[]) => void;
