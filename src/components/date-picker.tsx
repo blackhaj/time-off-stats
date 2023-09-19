@@ -40,9 +40,14 @@ export function DatePicker({
       className="max-w-md mx-auto"
       value={dateRange}
       onValueChange={setDateRange}
-      locale={es}
       selectPlaceholder="Select a date range"
       color="rose"
+      defaultValue={{
+        from: oldestDate,
+        to: futureDate,
+        selectValue: ALL_TIME,
+      }}
+      maxDate={new Date()}
     >
       <DateRangePickerItem
         key={ONE_MONTH}
@@ -51,36 +56,50 @@ export function DatePicker({
       >
         Last month
       </DateRangePickerItem>
-      <DateRangePickerItem
-        key={THREE_MONTHS}
-        value={THREE_MONTHS}
-        from={threeMonthsAgo()}
-      >
-        Last quarter
-      </DateRangePickerItem>
-      <DateRangePickerItem
-        key={SIX_MONTHS}
-        value={SIX_MONTHS}
-        from={sixMonthsAgo()}
-      >
-        Last six months
-      </DateRangePickerItem>
-      <DateRangePickerItem key={YTD} value={YTD} from={yearStart()}>
-        Year to date
-      </DateRangePickerItem>
-      <DateRangePickerItem key={ONE_YEAR} value={ONE_YEAR} from={oneYearAgo()}>
-        Last year
-      </DateRangePickerItem>
+      {oldestDate < threeMonthsAgo() ? (
+        <DateRangePickerItem
+          key={THREE_MONTHS}
+          value={THREE_MONTHS}
+          from={threeMonthsAgo()}
+        >
+          Last quarter
+        </DateRangePickerItem>
+      ) : (
+        <></>
+      )}
+      {oldestDate < sixMonthsAgo() ? (
+        <DateRangePickerItem
+          key={SIX_MONTHS}
+          value={SIX_MONTHS}
+          from={sixMonthsAgo()}
+        >
+          Last six months
+        </DateRangePickerItem>
+      ) : (
+        <></>
+      )}
+
+      {oldestDate < yearStart() ? (
+        <DateRangePickerItem key={YTD} value={YTD} from={yearStart()}>
+          Year to date
+        </DateRangePickerItem>
+      ) : (
+        <></>
+      )}
+      {oldestDate < oneYearAgo() ? (
+        <DateRangePickerItem
+          key={ONE_YEAR}
+          value={ONE_YEAR}
+          from={oneYearAgo()}
+        >
+          Last year
+        </DateRangePickerItem>
+      ) : (
+        <></>
+      )}
+
       <DateRangePickerItem key={ALL_TIME} value={ALL_TIME} from={oldestDate}>
         All time
-      </DateRangePickerItem>
-      <DateRangePickerItem
-        key={FUTURE}
-        value={FUTURE}
-        from={getToday()}
-        to={futureDate}
-      >
-        Future leave
       </DateRangePickerItem>
     </DateRangePicker>
   );

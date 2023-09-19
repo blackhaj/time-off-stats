@@ -21,8 +21,6 @@ export const MainPage = () => {
     to: new Date(),
   });
 
-  console.log(dateRange);
-
   if (!parsedData) {
     return <UploadPage setParsedData={setParsedData} />;
   }
@@ -32,6 +30,7 @@ export const MainPage = () => {
       data={parsedData}
       dateRange={dateRange}
       setDateRange={setDateRange}
+      setParsedData={() => setParsedData(null)}
     />
   );
 };

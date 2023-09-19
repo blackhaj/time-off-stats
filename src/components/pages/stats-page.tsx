@@ -16,81 +16,9 @@ import { DatePicker } from '../date-picker';
 import { useState } from 'react';
 import { DonutChart } from '@tremor/react';
 import { FAQ } from '../faq';
+import { calculateStats } from '~/utils/calculateStats';
 
-const donutData = [
-  {
-    name: 'Vacation',
-    value: 100,
-  },
-  {
-    name: 'Public Holiday',
-    value: 20,
-  },
-  {
-    name: 'Out Sick',
-    value: 15,
-  },
-  {
-    name: 'Maze Offsite',
-    value: 9,
-  },
-];
-
-const chartData = [
-  {
-    Month: 'March 23',
-    Vacation: 3,
-    'Public Holiday': 0,
-    'Out Sick': 1,
-    'Maze Offsite': 0,
-  },
-  {
-    Month: 'April 23',
-    Vacation: 5,
-    'Public Holiday': 2,
-    'Out Sick': 0,
-    'Maze Offsite': 0,
-  },
-  {
-    Month: 'May 23',
-    Vacation: 0,
-    'Public Holiday': 3,
-    'Out Sick': 0,
-    'Maze Offsite': 0,
-  },
-  {
-    Month: 'Jun 23',
-    Vacation: 5,
-    'Public Holiday': 1,
-    'Out Sick': 0,
-    'Maze Offsite': 0,
-  },
-  {
-    Month: 'Jul 23',
-    Vacation: 1,
-    'Public Holiday': 0,
-    'Out Sick': 0,
-    'Maze Offsite': 0,
-  },
-  {
-    Month: 'Aug 23',
-    Vacation: 4,
-    'Public Holiday': 2,
-    'Out Sick': 0,
-    'Maze Offsite': 0,
-  },
-  {
-    Month: 'Sept 23',
-    Vacation: 1,
-    'Public Holiday': 0,
-    'Out Sick': 0,
-    'Maze Offsite': 0,
-  },
-];
-
-const categories = donutData.map((d) => d.name);
-
-const colors: Color[] = ['amber', 'cyan', 'rose', 'indigo', 'violet', 'slate'];
+const colors: Color[] = ['indigo', 'rose', 'cyan', 'amber', 'violet', 'slate'];
 
 const valueFormatter = (number: number) =>
   Intl.NumberFormat('us').format(number).toString();
@@ -99,15 +27,20 @@ export const StatsPage = ({
   data,
   dateRange,
   setDateRange,
+  setParsedData,
 }: {
   data: CsvState;
   dateRange: DateRangePickerValue;
   setDateRange: (value: DateRangePickerValue) => void;
+  setParsedData: () => void;
 }) => {
-  console.log(data);
+  const { barChartData, donutChartData, categories, total, periodInMonths } =
+    calculateStats({
+      data,
+      dateRange,
+    });
 
-  // When it date changes, calculate the new stats
-  // Categories & number of days
+  const noDatePicked = !dateRange.from || !dateRange.to;
 
   return (
     <>
@@ -124,8 +57,10 @@ export const StatsPage = ({
             alignItems="baseline"
             className="truncate space-x-3 mt-2"
           >
-            <Metric>{100}</Metric>
-            <Text className="truncate">over past 30 days</Text>
+            <Metric>{total}</Metric>
+            <Text className="truncate">
+              over past {periodInMonths} month{periodInMonths === 1 ? '' : 's'}
+            </Text>
           </Flex>
         </Card>
         <Card className="flex justify-center items-center">
@@ -136,41 +71,60 @@ export const StatsPage = ({
             futureDate={data.futureDate.toDate()}
           />
         </Card>
-        <Card className="flex flex-col items-center">
-          <Title>Time off by category</Title>
-          <DonutChart
-            className="mt-6"
-            data={donutData}
-            category="value"
-            index="name"
-            valueFormatter={valueFormatter}
-            colors={colors}
-            showLabel={false}
-            variant="pie"
-          />
-          <Legend
-            className="mt-3 mx-auto justify-center"
-            categories={categories}
-            colors={colors}
-          />
-        </Card>
-        <Card>
-          <Flex className="mt-6">
-            <Text>Type</Text>
-            <Text className="text-right">Days</Text>
-          </Flex>
-          <BarList
-            data={donutData}
-            valueFormatter={valueFormatter}
-            className="mt-2"
-          />
-        </Card>
+        {donutChartData.length ? (
+          <>
+            <Card className="flex flex-col items-center">
+              <Title>Time off by category</Title>
+              <DonutChart
+                className="mt-6"
+                data={donutChartData}
+                category="value"
+                index="name"
+                valueFormatter={valueFormatter}
+                colors={colors}
+                showLabel={false}
+                variant="pie"
+              />
+              <Legend
+                className="mt-3 mx-auto justify-center"
+                categories={categories}
+                colors={colors}
+              />
+            </Card>
+            <Card>
+              <Flex className="mt-6">
+                <Text>Type</Text>
+                <Text className="text-right">Days</Text>
+              </Flex>
+              <BarList
+                data={donutChartData}
+                valueFormatter={valueFormatter}
+                className="mt-2"
+              />
+            </Card>
+          </>
+        ) : noDatePicked ? (
+          <Card className="col-span-full">
+            <Title>No date range</Title>
+            <Text>
+              Pick a date from the date picker above to see your stats
+            </Text>
+          </Card>
+        ) : (
+          <Card className="col-span-full">
+            <Title>No data</Title>
+            <Text>
+              Looks like you didn&apos;t have any time off over this period, try
+              another
+            </Text>
+          </Card>
+        )}
         <Card className="col-span-full">
           <Title>Monthly</Title>
-          <Text>Your PTO month by month</Text>
+          <Text>Your all time PTO history, month by month</Text>
           <BarChart
             className="mt-4 h-80"
-            data={chartData}
+            data={barChartData}
             index="Month"
             categories={categories}
             colors={colors}
@@ -179,6 +133,14 @@ export const StatsPage = ({
           />
         </Card>
       </Grid>
+      <div className="w-full lg:max-w-screen-lg flex">
+        <a
+          className="underline hover:text-grey-800 cursor-pointer ml-auto p-2"
+          onClick={setParsedData}
+        >
+          Click to reset import
+        </a>
+      </div>
       <FAQ />
     </>
   );

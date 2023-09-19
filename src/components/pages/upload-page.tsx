@@ -13,8 +13,8 @@ const acceptedFiletypes = 'text/csv';
 
 export type Row = {
   'Request Type'?: string;
-  'Start Date'?: Date;
-  'End Date'?: Date;
+  'Start Date'?: dayjs.Dayjs;
+  'End Date'?: dayjs.Dayjs;
   'Num Days'?: number;
   'Holidays Taken'?: number;
   Status?: string;
@@ -25,8 +25,8 @@ export type CsvState = Papa.ParseResult<Row> & {
   futureDate: dayjs.Dayjs;
 };
 
-let oldestDate = dayjs();
-let futureDate = dayjs();
+let oldestDate = dayjs().add(100, 'year');
+let futureDate = dayjs().subtract(100, 'year');
 
 export const UploadPage = ({
   setParsedData,

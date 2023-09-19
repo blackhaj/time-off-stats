@@ -19,6 +19,8 @@
     "dayjs": "^1.11.9",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
+    "isSameOrAfter": "link:dayjs/plugin/isSameOrAfter",
+    "isSameOrBefore": "link:dayjs/plugin/isSameOrBefore",
     "next": "13.4.19",
     "papaparse": "^5.4.1",
     "postcss": "8.4.29",
