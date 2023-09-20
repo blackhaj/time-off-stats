@@ -4,6 +4,7 @@ import { PlusIcon } from './icons/plus-icon';
 import Link from 'next/link';
 import { InlineLink } from './InlineLink';
 import { DownloadLink } from './download-link';
+import Image from 'next/image';
 
 const Question = ({ children }: { children: React.ReactNode }) => {
   return <span className="text-base font-semibold leading-7">{children}</span>;
@@ -30,18 +31,29 @@ const faqs = [
   {
     question: <Question>How do I find my data?</Question>,
     answer: (
-      <Answer>
-        Go to the{' '}
-        <InlineLink
-          href="https://mazein.slack.com/apps/AELEX1TU3-time-off-by-deel"
-          external
-        >
-          Time Off by Deel
-        </InlineLink>{' '}
-        app page in Slack. Click the &quot;Home&quot; tab and select &quot;OOO
-        History&quot; from the dropdown. Scroll to the bottom of the page and
-        click the &quot;Export OOO to CSV button&quot;.
-      </Answer>
+      <>
+        <Answer>
+          Go to the{' '}
+          <InlineLink
+            href="https://mazein.slack.com/apps/AELEX1TU3-time-off-by-deel"
+            external
+          >
+            Time Off by Deel
+          </InlineLink>{' '}
+          app page in Slack. Click the &quot;Home&quot; tab and select &quot;OOO
+          History&quot; from the dropdown. Scroll to the bottom of the page and
+          click the &quot;Export OOO to CSV&quot; button.
+        </Answer>
+        <div className="p-5">
+          <Image
+            className="shadow-lg rounded-lg bg-white"
+            alt="An image showing the export button"
+            src={'/export-location.png'}
+            width={1160}
+            height={880}
+          />
+        </div>
+      </>
     ),
   },
   {

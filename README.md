@@ -19,36 +19,3 @@ To run the repo:
 pnpm install
 pnpm dev
 ```
-
----
-
-# Todo
-
-1. Layout
-   1. Header
-   2. Subtitle
-   3. Dropzone
-   4. FAQ
-2. After import
-   1. Title
-   2. Date picker
-   3. Total Metric
-   4. Pie with %
-   5. Bar list
-   6. Monthly chart (bar or line)
-
-Logic:
-
-- Dropzone
-  - Read file
-  - Parse file
-  - Save in state the various metrics
-
-Time periods:
-
-- Month
-- Quarter
-- 6 months
-- Year
-- All time
-- Custom

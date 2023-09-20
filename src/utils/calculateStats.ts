@@ -83,6 +83,7 @@ export const calculateStats = ({
       return;
     }
 
+    // TODO - time off overlapping months is counted in start month
     // process monthly data
     const rowYear = rowStart.year();
     const rowMonth = rowStart.month();
@@ -155,12 +156,15 @@ export const calculateStats = ({
     }
   });
 
-  const donutChartData = Object.entries(periodCategoryCounts).map(
-    ([name, value]) => ({
-      name,
-      value,
-    })
-  );
+  const categoriesArray = [...categories];
+
+  // To ensure the legend colors are correct, we map over the categories
+  const donutChartData = categoriesArray.map((category) => {
+    return {
+      name: category,
+      value: periodCategoryCounts[category] || 0,
+    };
+  });
 
   const barChartData: BarChartData = [];
   Object.entries(monthlyTotals).forEach(([year, months]) => {
@@ -175,7 +179,7 @@ export const calculateStats = ({
   return {
     donutChartData,
     barChartData,
-    categories: [...categories],
+    categories: categoriesArray,
     total: donutChartData.reduce((acc, curr) => acc + curr.value, 0),
     periodInMonths,
   };

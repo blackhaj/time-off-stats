@@ -97,7 +97,7 @@ export const StatsPage = ({
                 <Text className="text-right">Days</Text>
               </Flex>
               <BarList
-                data={donutChartData}
+                data={donutChartData.filter((d) => d.value > 0)}
                 valueFormatter={valueFormatter}
                 className="mt-2"
               />
