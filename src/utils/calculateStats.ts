@@ -50,6 +50,10 @@ export const calculateStats = ({
   const periodInMonths =
     selectedPeriodEnd.diff(selectedPeriodStart, 'month') + 1;
 
+  // TODO fix incorrect month count
+  // Incorrect on first load
+  // Issue is because the of local timezones (the initial timezones are instantiated on the server)
+
   const categories = new Set<string>();
 
   const periodCategoryCounts: {
